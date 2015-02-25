@@ -2,8 +2,8 @@
 Produce sheet music from audio file.
 
 --PHASE 1
-  Visualize audio.
-  Extrapolate frequency.
+  Visualize audio.        -- Stephen & Laura
+  Extrapolate frequency.  -- Jack & Samuel
 
 --PHASE 2
   Match frequency.
