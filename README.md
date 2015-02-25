@@ -1,12 +1,16 @@
 # Heard
-Producing sheet music from an audio file.
+Produce sheet music from audio file.
 
-TODO
-  Load .wav file.
-  Visualize the audio.
-  Represent audio numerically.
-  Translate to musical notation.
-  Distinguish beats/tempo based on sampling.
+--PHASE 1
+  Visualize audio.
+  Extrapolate frequency.
+
+--PHASE 2
+  Match frequency.
+  Extrapolate time signature.
+
+--PHASE 3
+  Represent in musical notation.
   Develop UI.
 
 18 Feb 2015
@@ -16,6 +20,3 @@ TODO
 
 25 Mar 2015
   DEADLINE
-
-EXTRA
-  Produce permanent sheet music which can be read and performed by the computer.
