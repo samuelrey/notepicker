@@ -17,6 +17,10 @@ Produce sheet music from audio file.
   Set up local repositories.
   Establish style guide.
   Assign initial tasks and research.
+  
+25 Feb 2015
+  Pull frequency data from audio.
+  Plot audio data for visual reference.
 
 25 Mar 2015
   DEADLINE
