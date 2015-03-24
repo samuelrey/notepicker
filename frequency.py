@@ -1,10 +1,11 @@
 from scikits.audiolab import wavread, Sndfile
-from numpy import argmax, diff, linspace
+from numpy import argmax, diff, linspace, array
 from matplotlib.pyplot import plot, show
 from matplotlib.mlab import find
 from scipy.signal import fftconvolve
 from time import time
 from sys import argv, exit
+from traceback import format_exc
 
 OCTAVES = [31.7, 63.5, 127.1, 254.2, 508.6, 1017.4, 2034.0, 4068.0, 7902.0]
 BASE_FR = [16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87]
@@ -18,17 +19,29 @@ def read(filename):
 	try:
 		signal, sample_rate, encoding = wavread(filename)
 		channels = Sndfile(filename, 'r').channels
+		
+	# if there are more than one channels, just use the first.
+		if channels > 1:
+			actual = []
+			for sample in signal:
+				actual.append(sample[0])
+			signal = array(actual)
 	except IOError:
 		print 'Error: Cannot open %s' % filename
+		print format_exc()
 		exit(0)
 		
-	return signal, sample_rate, channels
+	return signal, sample_rate
 	
 def graph(signal, sample_rate):
-	''' Plot the signal with respect to time. '''
+	''' Plot the signal. '''
 	
-	Time = linspace(0, len(signal) / sample_rate, num = len(signal))
-	plot(Time, signal)
+	# plot with respect to time.
+#	Time = linspace(0, len(signal) / sample_rate, num = len(signal))
+#	plot(Time, signal)
+
+	# plot with respect to the number of samples.
+	plot(signal)
 	show()
 
 def autocorrelate(signal):
@@ -42,33 +55,33 @@ def autocorrelate(signal):
 	
 	return auto
 
-def frequency(signal, sample_rate):
+def findFrequency(signal, sample_rate):
 	''' Determine the frequency of the signal. '''
 
-	# find the first minimum point in the signal
+	# find the first minimum point in the signal.
 	difference = diff(signal)
 	start = find(difference > 0)[0]
     
-    # find the peak from that position
-    # calculate the period using quadratic interpolation
+    # find the peak from that position.
+    # calculate the period using quadratic interpolation.
 	peak = argmax(signal[start:]) + start
 	period = 1/2.0 * (signal[peak-1] - signal[peak+1]) / (signal[peak-1] - 2 * signal[peak] + signal[peak+1]) + peak
     
 	return (sample_rate / period), start, period
 
-def recognition(frequency):
+def recognize(frequency):
 	''' Match the frequency to the musical note. '''
 	
-	# get the octave of the frequency
+	# get the octave of the frequency.
 	for index, value in enumerate(OCTAVES):
 		if(frequency < value):
 			octave = index
 			break
 
-	# adjust the frequency
+	# adjust the frequency.
 	adj_freq = frequency / (2 ** octave)
 	
-	# get the letter note of the frequency
+	# get the letter note of the frequency.
 	for index in range(12):
 		if(abs(BASE_FR[index] - adj_freq) < .6):
 			note = BASE_NO[index]
@@ -86,14 +99,11 @@ if __name__ == '__main__':
 			audio.append(str(argv[index]))
 	
 		for filename in audio:
-			signal, sample_rate, channels = read(filename)
 			start_time = time()
+			signal, sample_rate = read(filename)
 			auto = autocorrelate(signal)
-			freq, start, period = frequency(auto, sample_rate)
+			freq, start, period = findFrequency(auto, sample_rate)
 			print '******************************'
-			print 'Sample Rate: %i' % sample_rate
-			print 'Channels: %i' % channels
 			print 'Frequency: %.3f' % freq
-			print 'Period: %i' % period
-			print 'Note: %s%i' % recognition(freq)
+			print 'Note: %s%i' % recognize(freq)
 			print 'Time elapsed: %.3f s' % (time() - start_time)
