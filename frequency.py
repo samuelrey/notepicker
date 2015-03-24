@@ -20,11 +20,11 @@ def read(filename):
 		signal, sample_rate, encoding = wavread(filename)
 		channels = Sndfile(filename, 'r').channels
 		
-	# if there are more than one channels, just use the first.
+	# if there are more than one channels, average them.
 		if channels > 1:
 			actual = []
 			for sample in signal:
-				actual.append(sample[0])
+				actual.append(sample[0] + sample[1] / 2)
 			signal = array(actual)
 	except IOError:
 		print 'Error: Cannot open %s' % filename

@@ -17,8 +17,8 @@ from sys import argv
 # peaks below the threshold to signify the
 # end of a possible note.
 THRESHOLD=.08
-NOTE=10
-BREAK=22
+NOTE=90
+BREAK=50
 
 def findPeaks(signal):
 	''' Find all of the peaks in the signal. '''

@@ -1,5 +1,6 @@
 from frequency import read, autocorrelate, findFrequency, recognize
 from identify import findPeaks, findNotes
+from traceback import format_exc
 from time import time
 from sys import argv
 
@@ -13,9 +14,14 @@ if __name__ == '__main__':
 		peaks = findPeaks(signal)
 		notes = findNotes(signal, peaks)
 		for note in notes:
-			auto = autocorrelate(signal[note[0]:note[1]])
-			freq, start, period = findFrequency(auto, sample_rate)
-			print '******************************'
-			print 'Frequency: %.3f' % freq
-			print 'Note: %s%i' % recognize(freq)
-			print 'Time elapsed: %.3f s' % (time() - start_time)
+			try:
+				auto = autocorrelate(signal[note[0]:note[1]])
+				freq, start, period = findFrequency(auto, sample_rate)
+				print '******************************'
+				print 'Frequency: %.3f' % freq
+				print 'Note: %s%i' % recognize(freq)
+				print 'Time elapsed: %.3f s' % (time() - start_time)
+			except UnboundLocalError:
+				print 'Error: Cannot identify note at %i' % note[0]
+				print format_exc()
+				continue
