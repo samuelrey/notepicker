@@ -67,7 +67,7 @@ def findFrequency(signal, sample_rate):
 	peak = argmax(signal[start:]) + start
 	period = 1/2.0 * (signal[peak-1] - signal[peak+1]) / (signal[peak-1] - 2 * signal[peak] + signal[peak+1]) + peak
     
-	return (sample_rate / period), start, period
+	return (sample_rate / period)
 
 def recognize(frequency):
 	''' Match the frequency to the musical note. '''
@@ -87,7 +87,7 @@ def recognize(frequency):
 			note = BASE_NO[index]
 			break
 			
-	return note, octave
+	return note
 
 if __name__ == '__main__':
 	if(len(argv) < 2):
@@ -102,8 +102,8 @@ if __name__ == '__main__':
 			start_time = time()
 			signal, sample_rate = read(filename)
 			auto = autocorrelate(signal)
-			freq, start, period = findFrequency(auto, sample_rate)
+			freq = findFrequency(auto, sample_rate)
 			print '******************************'
 			print 'Frequency: %.3f' % freq
-			print 'Note: %s%i' % recognize(freq)
+			print 'Note: %s' % recognize(freq)
 			print 'Time elapsed: %.3f s' % (time() - start_time)

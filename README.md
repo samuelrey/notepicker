@@ -1,18 +1,18 @@
-# Heard
+# Note Picker
 Produce sheet music from audio file.
 
 --PHASE 1 [COMPLETE]
   Visualize audio.					-- Stephen & Laura
   Extrapolate frequency.			-- Jack & Samuel
 
---PHASE 2
+--PHASE 2 [COMPLETE]
   Match frequency.					-- Samuel
   Identify individual notes.		-- Samuel & Laura
-  Extrapolate time signature.		-- Stephen & Laura
 
 --PHASE 3
   Represent in musical notation.	-- Stephen & Jack
-  Develop UI.						-- Stephen & Jack
+  Develop UI.						-- Jack
+  Extrapolate time signature.		-- Stephen & Laura
 
 18 Feb 2015
   Set up local repositories.
