@@ -1,13 +1,20 @@
-from frequency import read, graph
-from sys import argv
+# Filename: frequency.py
+#
+# Summary: plots wav files
+#
+# Author: Samuel Villavicencio
+# 
+# Last Updated: Oct 07 2015
 
-if __name__ == '__main__':
-	if(len(argv) < 2):
-		print 'Usage: python %s <filename>' % argv[0]
-		exit(1)
-	else:
-		filename = argv[1]
-		signal, sample_rate = read(filename)
-		print "Number of samples %i" % len(signal)
-		graph(signal[:len(signal) / 2], sample_rate)
-		graph(signal[len(signal) / 2:], sample_rate)
+import matplotlib.pyplot	# plot show
+
+def graph(signal, sample_rate):
+	''' Plot the signal. '''
+
+	# plot with respect to time.
+#	Time = numpy.linspace(0, len(signal) / sample_rate, num = len(signal))
+#	matplotlib.pyplot.plot(Time, signal)
+
+	# plot with respect to the number of samples.
+	matplotlib.pyplot.plot(signal)
+	matplotlib.pyplot.show()
