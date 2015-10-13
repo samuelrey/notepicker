@@ -16,6 +16,7 @@ import scipy.signal	# fftconvolve
 import matplotlib.mlab	# difference
 
 class NotePicker():
+
 	def __init__(self):		
 		# OCTAVES represents the frequency bounds of every octave
 		# BASE_FR represents the individual frequencies in the 0th octave
@@ -51,12 +52,16 @@ class NotePicker():
 				sys.exit(1)
 
 			# if there are two channels, average them.
-			elif( self.channels == 2 ):
+			if( self.channels == 2 ):
 				actual = ''
-				for (sample1, sample2) in zip(self.signal[0::2], self.signal[1::2]):
-					actual += hex((ord(sample1) + ord(sample2)) / 2)[2:].zfill(2).decode('hex')
+				indices = numpy.arange(len(self.signal))
+				for index in indices[0::4]:
+					first = hex((ord(self.signal[index]) + ord(self.signal[index + 2])) / 2)[2:].zfill(2)
+					second = hex((ord(self.signal[index + 1]) + ord(self.signal[index + 3])) / 2)[2:].zfill(2)
+					actual = actual + first.decode('hex')
+					actual = actual + second.decode('hex')
+
 				self.signal = actual
-				self.no_samples /= 2
 
 			# create numpy array to represent signal string as appropriate data type
 			# according to the sample width.
@@ -64,22 +69,8 @@ class NotePicker():
 				raise wave.Error 
 				sys.exit(1)
 
-			if( self.sample_width == 3 ):
-				array = numpy.empty((self.no_samples, self.channels, 4), dtype = numpy.uint8)
-				raw_bytes = numpy.fromstring(self.signal, dtype = numpy.uint8)
-				array[:, :, :self.sample_width] = raw_bytes.reshape(-1, self.channels, self.sample_width)
-				array[:, :, self.sample_width:] = (array[:, :, self.sample_width - 1:self.sample_width] >> 7) * 255
-				self.signal = array.view('<i4').reshape(array.shape[:-1])
-				self.signal = self.signal.reshape(-1)
-
-			else:
-				if( self.sample_width == 1 ):
-					dt_char = 'u'
-				else:
-					dt_char = 'i'
-				array = numpy.fromstring(self.signal, dtype = '<%s%d' % (dt_char, self.sample_width))
-				self.signal = array.reshape(-1)
-
+			self.signal = numpy.fromstring(self.signal, dtype = '<i2')
+				
 			wav.close()
 
 		except EOFError:
@@ -94,24 +85,25 @@ class NotePicker():
 			raise wave.Error
 			sys.exit(1)
 
-	def getFrequency(self, signal, sample_rate):
+	def getFrequency(self):
 		''' Determine the frequency of the signal. '''
 
-		# correct the signal.
-		signal = scipy.signal.fftconvolve(signal, signal[::-1], mode='full')
-		signal = signal[len(signal)/2:]
+		try:
+			# correct the signal.
+			auto = scipy.signal.fftconvolve(self.signal, self.signal[::-1], mode='full')
+			auto = auto[len(auto)/2:]
 
-		# find the first minimum point in the signal.
-		difference = numpy.diff(signal)
-		start = matplotlib.mlab.find(difference > 0)[0]
-    
-		# find the peak from that position.
-		peak = numpy.argmax(signal[start:]) + start
+			# find the first minimum point in the signal.
+			difference = numpy.diff(auto)
+			start = matplotlib.mlab.find(difference > 0)[0]
 
-		# calculate the period using parabolic interpolation.
-		period = 1/2.0 * (signal[peak-1] - signal[peak+1]) / (signal[peak-1] - 2 * signal[peak] + signal[peak+1]) + peak
-    
-		return (sample_rate / period)
+			# find the peak from that position.
+			peak = numpy.argmax(auto[start:]) + start
+			# calculate the period using parabolic interpolation.
+			period = 1/2.0 * (auto[peak-1] - auto[peak+1]) / (auto[peak-1] - 2 * auto[peak] + auto[peak+1]) + peak
+			self.frequency = self.sample_rate / period
+		except:
+			print traceback.format_exc()
 
 	def getNote(self, frequency):
 		''' Match the frequency to the musical note. '''
@@ -137,6 +129,8 @@ class NotePicker():
 if __name__ == '__main__':
 	notepicker = NotePicker()
 	notepicker.read('../Music/c1.wav')
+	notepicker.getFrequency()
+	print notepicker.frequency
 '''	audio = []
 	for index in range(1, len(sys.argv)):
 		audio.append(str(sys.argv[index]))

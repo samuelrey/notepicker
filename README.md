@@ -1,4 +1,5 @@
-                                  Note Picker
+				  Note Picker
+				  -----------
 
 Purpose and Summary
 -------------------
@@ -47,8 +48,6 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-https://stackoverflow.com/questions/20677390/python-wave-byte-data#answer-206777
-33
 https://gist.github.com/WarrenWeckesser/7461781
 https://gist.github.com/endolith/255291
 
