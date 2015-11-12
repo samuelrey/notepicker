@@ -11,13 +11,13 @@ import wave
 import unittest
 sys.path.append('/home/psycho/Projects/Note_Picker/Source')
 import _write
-import notepicker
+import picker
 
 class ReadTest(unittest.TestCase):
 
 	
 	def testFileDoesNotExist(self):
-		np = notepicker.NotePicker()
+		np = picker.Picker()
 		files = ['', 'nonexistent']
 
 		for file in files:

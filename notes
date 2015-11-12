@@ -1,0 +1,15 @@
+# FREQUENCY THROUGH AUTOCORRELATION & PARABOLIC INTERPOLATION
+
+# correct the signal.
+# auto = scipy.signal.fftconvolve(signal, signal[::-1], mode='full')
+# auto = auto[len(auto)/2:]
+
+# find the first minimum point in the signal.
+# difference = numpy.diff(auto)
+# start = matplotlib.mlab.find(difference > 0)[0]
+
+# find the peak from that position.
+# peak = numpy.argmax(auto[start:]) + start
+# calculate the period using parabolic interpolation.
+# period = 1/2.0 * (auto[peak-1] - auto[peak+1]) / (auto[peak-1] - 2 * auto[peak] + auto[peak+1]) + peak
+# frequency = sample_rate / period
