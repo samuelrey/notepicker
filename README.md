@@ -1,5 +1,5 @@
-				  Note Picker
-				  -----------
+# Note Picker
+-------------
 
 Purpose and Summary
 -------------------
