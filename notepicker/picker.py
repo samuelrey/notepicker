@@ -23,51 +23,7 @@ class Picker():
         self.no_samples = 0
         self.sample_rate = 0
 
-    def read(self, filename):
-        ''' Read and prepare the audio file. '''
 
-        # try to extract attributes from wav file.
-        try:
-            wav = wave.open(filename, 'r')
-            frames = wav.getnframes()
-            sample_width = wav.getsampwidth()
-            self.sample_rate = wav.getframerate()
-            self.channels = wav.getnchannels()
-            self.signal = wav.readframes(frames)
-
-            # if there are more than two channels, raise exception.
-            if (self.channels > 2):
-                raise ValueError
-                sys.exit(1)
-
-            # if there are two channels, average them.
-            if (self.channels == 2):
-                actual = ''
-                indices = numpy.arange(len(self.signal))
-                for index in indices[0::4]:
-                    first = hex((ord(self.signal[index]) + ord(self.signal[index + 2])) / 2)[2:].zfill(2)
-                    second = hex((ord(self.signal[index + 1]) + ord(self.signal[index + 3])) / 2)[2:].zfill(2)
-                    actual = actual + first.decode('hex')
-                    actual = actual + second.decode('hex')
-
-                self.signal = actual
-
-            self.signal = numpy.fromstring(self.signal, dtype='<i2')
-            self.no_samples = len(self.signal)
-
-            wav.close()
-
-        except EOFError:
-            raise EOFError
-            sys.exit(1)
-
-        except IOError:
-            raise IOError
-            sys.exit(1)
-
-        except wave.Error:
-            raise wave.Error
-            sys.exit(1)
 
     # TODO
     # Values must be adjusted for different songs

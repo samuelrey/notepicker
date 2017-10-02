@@ -66,7 +66,7 @@ class ReadTest(unittest.TestCase):
             _write.removeNote()
 
     def testUnsupportedChannels(self):
-        file = 'test.wav'
+        file = 'tests.wav'
         np = notepicker.NotePicker()
 
         try:
@@ -81,7 +81,7 @@ class ReadTest(unittest.TestCase):
             _write.removeNote()
 
     def testSupportedSampleWidth(self):
-        file = 'test.wav'
+        file = 'tests.wav'
         np = notepicker.NotePicker()
 
         try:
@@ -105,7 +105,7 @@ class ReadTest(unittest.TestCase):
             _write.removeNote()
 
     def testSupportedSampleRate(self):
-        file = 'test.wav'
+        file = 'tests.wav'
         np = notepicker.NotePicker()
 
         try:
